@@ -1,0 +1,567 @@
+:root {
+    --background: #000000;
+    --foreground: #ffffff;
+    --muted: #1a1a1a;
+    --muted-foreground: #808080;
+    --border: #333333;
+    --input: #1a1a1a;
+    --ring: #ffffff;
+    --radius: 0.5rem;
+    --sticky-bg: #1a1a1a;
+    --sticky-heading: #ffffff;
+    --sticky-text: #ffffff;
+}
+
+body {
+    margin: 0;
+    background-color: var(--background);
+    color: var(--foreground);
+}
+
+#whiteboard {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background);
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.13) 1px, transparent 3px);
+    background-size: 30px 30px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.sticky {
+    position: absolute;
+    min-width: 150px;
+    min-height: 150px;
+    background: var(--sticky-bg);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 12px;
+    box-sizing: border-box;
+    cursor: move;
+    border-radius: var(--radius);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.sticky:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.sticky.selected {
+    border-color: var(--foreground);
+}
+
+.sticky[data-type="heading"] {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    min-height: auto;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.sticky[data-type="heading"] .sticky-heading {
+    font-size: 24px;
+    font-weight: 400;
+    padding: 8px 0;
+}
+
+.sticky-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+    min-width: 0;
+}
+
+.sticky-heading {
+    flex: 1;
+    min-width: 0;
+    padding: 4px;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    font-size: 14px;
+    outline: none;
+    color: var(--sticky-heading);
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sticky-heading:focus {
+    border-color: var(--ring);
+}
+
+.sticky textarea {
+    flex: 1;
+    border: none;
+    background: transparent;
+    resize: none;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    color: var(--sticky-text);
+    line-height: 1.5;
+    padding: 4px;
+}
+
+.sticky textarea::placeholder {
+    color: var(--muted-foreground);
+}
+
+.delete-button {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0;
+    transition: all 0.2s;
+    border-radius: var(--radius);
+    visibility: hidden;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sticky.selected .delete-button {
+    opacity: 1;
+    visibility: visible;
+}
+
+.delete-button:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, var(--muted-foreground) 50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    visibility: hidden;
+}
+
+.sticky.selected .resize-handle,
+.clock-sticky.selected .resize-handle {
+    opacity: 0.5;
+    visibility: visible;
+}
+
+.resize-handle:hover {
+    opacity: 1;
+}
+
+#contextMenu {
+    position: absolute;
+    background: var(--muted);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 8px 0;
+    border-radius: var(--radius);
+    z-index: 100;
+    user-select: none;
+    min-width: 180px;
+}
+
+.contextMenuItem {
+    padding: 12px 16px;
+    cursor: pointer;
+    color: var(--foreground);
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.contextMenuItem:hover {
+    background-color: var(--border);
+}
+
+.clock-sticky {
+    position: absolute;
+    background: transparent;
+    padding: 0;
+    cursor: move;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.clock-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.clock-time {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 600;
+    color: var(--foreground);
+    letter-spacing: 1px;
+    line-height: 1;
+    font-size: calc(min(100%, 100vh) * 5);
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clock-sticky .delete-button {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.clock-sticky.selected .delete-button {
+    opacity: 1;
+    visibility: visible;
+}
+
+.link-sticky {
+    position: absolute;
+    background: var(--sticky-bg);
+    padding: 14px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    user-select: none;
+}
+
+.link-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 4px;
+}
+
+.link-icon-container {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--input);
+    border-radius: var(--radius);
+    padding: 4px;
+}
+
+.link-icon {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.link-name {
+    color: var(--sticky-text);
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding: 0 4px;
+}
+
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.dialog {
+    background: var(--sticky-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    min-width: 300px;
+}
+
+.dialog h3 {
+    margin: 0 0 16px 0;
+    color: var(--sticky-text);
+}
+
+.dialog input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--sticky-text);
+}
+
+.dialog-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.dialog-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--input);
+    color: var(--sticky-text);
+}
+
+.dialog-buttons button[type="submit"] {
+    background: var(--ring);
+    color: var(--background);
+}
+
+.settings-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--bg-color);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.settings-button:hover {
+    background: var(--hover-color);
+    border-color: var(--foreground);
+}
+
+.settings-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.settings-dialog {
+    background: var(--sticky-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.settings-dialog h3 {
+    margin: 0 0 20px 0;
+    color: var(--foreground);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.settings-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--input);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.settings-section h4 {
+    margin: 0 0 12px 0;
+    color: var(--foreground);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.settings-section textarea {
+    width: 95%;
+    min-height: 120px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: var(--sticky-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    resize: none;
+    tab-size: 4;
+    white-space: pre;
+    word-wrap: normal;
+    overflow-x: auto;
+}
+
+.settings-section textarea:focus {
+    outline: none;
+    border-color: var(--ring);
+}
+
+.settings-section textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 0.7;
+}
+
+.settings-section button {
+    padding: 8px 16px;
+    background: var(--sticky-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.settings-section button:hover {
+    background: var(--border);
+}
+
+.settings-section button:active {
+    transform: scale(0.98);
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.dialog-buttons button {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--input);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dialog-buttons button:hover {
+    background: var(--border);
+}
+
+.dialog-buttons button[type="submit"] {
+    background: var(--ring);
+    color: var(--background);
+    border: none;
+}
+
+.dialog-buttons button[type="submit"]:hover {
+    background: var(--foreground);
+}
+
+.export-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.export-section button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--sticky-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.export-section button:hover {
+    background: var(--border);
+}
+
+.export-section button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.import-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.import-section textarea {
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.import-section .error-message {
+    color: #ff4444;
+    font-size: 13px;
+    margin-top: 4px;
+    display: none;
+}
+
+.import-section .error-message.visible {
+    display: block;
+}
+
+.danger-section {
+    border: 1px solid #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.danger-section h4 {
+    color: #ff4444;
+}
+
+.danger-button {
+    background: #ff4444 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.danger-button:hover {
+    background: #ff6666 !important;
+}
+
+.danger-button:active {
+    background: #ff3333 !important;
+}
