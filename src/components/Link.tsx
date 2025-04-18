@@ -65,8 +65,10 @@ export default function Link({ x, y, id, name, url, onMouseDown, onDelete, onCha
     }, [isResizing, startPos, startSize, id, onChange]);
 
     const handleClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        window.open(url, '_blank');
+        if (e.detail === 2 || isSelected) {
+            e.preventDefault();
+            window.location.href = url;
+        }
     };
 
     const handleResizeMouseDown = (e: React.MouseEvent) => {
@@ -98,15 +100,18 @@ export default function Link({ x, y, id, name, url, onMouseDown, onDelete, onCha
                 </div>
                 <span className="link-name">{name}</span>
             </div>
-            <button 
-                className="delete-button"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(id);
-                }}
-            >
-                ×
-            </button>
+            {isSelected && (
+                <button 
+                    className="delete-button"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onDelete(id);
+                    }}
+                >
+                    ×
+                </button>
+            )}
             <div 
                 className="resize-handle" 
                 onMouseDown={handleResizeMouseDown}
