@@ -53,7 +53,6 @@ A customizable new tab extension for Chrome with a modern whiteboard interface. 
 ### Tips
 
 - Use headings to organize your whiteboard into sections
-- Add clocks to track different time zones
 - Create quick links for frequently visited websites
 - Export your configuration before making major changes
 - The whiteboard automatically saves your changes
