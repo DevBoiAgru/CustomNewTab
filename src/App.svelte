@@ -202,6 +202,8 @@
           e.preventDefault();
           if (addLinkTitle !== "" && addLinkURL !== "") {
             createNote(NoteCategory.Link, addLinkTitle, addLinkURL);
+            addLinkTitle = "";
+            addLinkURL = "";
           }
           addingLink = false;
         }}
