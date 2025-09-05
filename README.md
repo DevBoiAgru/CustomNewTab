@@ -25,6 +25,8 @@ A customizable new tab page with a modern whiteboard interface. Create and organ
 5. Enable `Developer mode` using the toggle switch in the top right corner
 6. Click "Load unpacked" and select the `build` folder
 
+or optionally go to the [releases](https://github.com/DevBoiAgru/CustomNewTab/releases) tab, download the latest version, extract the zip file somewhere, and load that as unpacked extension (Step 4 onwards)
+
 ## Usage
 
 ### Adding Elements
