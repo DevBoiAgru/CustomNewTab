@@ -328,7 +328,7 @@
   }
 
   .app-button:hover {
-    box-shadow: white 0px 0px 6px 1px;
+    box-shadow: #ffffff4f 0px 0px 4px 2px;
   }
 
   .settings-button {

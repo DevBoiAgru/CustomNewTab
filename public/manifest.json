@@ -1,0 +1,11 @@
+{
+  "name": "CustomNewTab",
+  "description": "Custom new tab page by @devboiagru for productivity.",
+  "version": "1.0",
+  "incognito": "split",
+
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "manifest_version": 3
+}
