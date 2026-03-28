@@ -144,6 +144,7 @@
               return { x: 110, y: 110 };
           }
         })(),
+        locked: false
       },
     ]);
   }
@@ -290,6 +291,7 @@
       sizeX={note.size.x}
       sizeY={note.size.y}
       linkURL={note.linkAddress}
+      locked={note.locked}
     />
   {/each}
 
@@ -329,8 +331,8 @@
     justify-content: center;
   }
 
-  .app-button:hover {
-    box-shadow: #ffffff4f 0px 0px 4px 2px;
+  .settings-button:hover {
+    border: var(--app-border-active);
   }
 
   .settings-button {

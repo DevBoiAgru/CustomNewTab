@@ -2,6 +2,8 @@
   import { NoteCategory } from "../lib/Types";
   import { NoteStore } from "../lib/Stores";
   import { onMount } from "svelte";
+  import { Lock } from "@lucide/svelte";
+  import { LockOpen } from "@lucide/svelte";
 
   let {
     noteID,
@@ -13,6 +15,7 @@
     noteLeft,
     sizeX = 30,
     sizeY = 30,
+    locked = false
   }: {
     noteID: string;
     noteCateg: NoteCategory;
@@ -23,6 +26,7 @@
     noteLeft: number;
     sizeX: number;
     sizeY: number;
+    locked: boolean;
   } = $props();
 
   // Used for dragging and resizing
@@ -59,12 +63,12 @@
     }
 
     function onMouseMove(e: MouseEvent) {
-      if (dragging && !resizing) {
+      if (dragging && !resizing && !locked) {
         noteLeft += e.movementX;
         noteTop += e.movementY;
         updateNote(); // for some reason no other note than the first one updates when calling this on mouse up
       }
-      if (dragging && resizing) {
+      if (dragging && resizing && !locked) {
         switch (noteCateg) {
           case NoteCategory.Clock:
           case NoteCategory.StickyNote:
@@ -130,6 +134,7 @@
             heading: heading,
             position: { x: noteLeft, y: noteTop },
             size: { x: sizeX, y: sizeY },
+            locked: locked,
           };
         }
         return note;
@@ -165,11 +170,30 @@
   <button class="note-delete-button note-button" onclick={deleteNote}
     >&#10006;</button
   >
+  
+  {#if !locked}
   <button
     class="note-resize-button note-button"
     name="resize-btn"
     bind:this={resizeHandle}>&#9698;</button
   >
+  {/if}
+
+  <button
+    class="note-lock-button note-button"
+    name="lock-btn"
+    onclick={()=>{
+      locked = !locked
+      updateNote()
+    }}>
+    {#if locked}
+    <Lock size={15}/>
+    {:else}
+    <LockOpen size={15}/>
+    {/if}
+    </button
+  >
+
   <!-- Sticky note -->
   {#if noteCateg == NoteCategory.StickyNote}
     <div class="note">
@@ -228,8 +252,8 @@
       >
         <img
           class="link-icon"
-          src="chrome-extension://{chrome.runtime.id}/_favicon/?pageUrl={new URL(linkURL).origin + new URL(linkURL).pathname}&size=64"
-          alt="${heading} icon"
+          src="chrome-extension://{chrome?.runtime?.id ?? "NULL"}/_favicon/?pageUrl={new URL(linkURL).origin + new URL(linkURL).pathname}&size=64"
+          alt="{heading} icon"
           draggable="false"
         />
         <p>{heading}</p>
@@ -310,7 +334,7 @@
   }
 
   .note-delete-button {
-    text-shadow: 0px 0px 9px var(--text-color);
+    text-shadow: 0px 0px 2px var(--text-color);
     cursor: pointer;
     right: 5px;
     width: 20px;
@@ -324,6 +348,15 @@
     margin: 0px;
     bottom: 0px;
     cursor: nw-resize;
+  }
+
+  .note-lock-button {
+    left: 0px;
+    width: 20px;
+    height: 20px;
+    margin: 0px;
+    bottom: 0px;
+    cursor: pointer;
   }
 
   .link-note {

@@ -18,4 +18,5 @@ export interface NoteType {
     linkAddress: string;
     position: Vector2D;
     size: Vector2D;
+    locked: boolean
 }
