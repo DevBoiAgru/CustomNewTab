@@ -119,9 +119,6 @@
     };
   });
 
-  let content = $state(noteContent);
-  let heading = $state(noteHeading);
-
   // Update this note in the notes collection
   function updateNote() {
     // Update the note's content and heading on the store
@@ -130,8 +127,8 @@
         if (note.id === noteID) {
           return {
             ...note,
-            content: content,
-            heading: heading,
+            content: noteContent,
+            heading: noteHeading,
             position: { x: noteLeft, y: noteTop },
             size: { x: sizeX, y: sizeY },
             locked: locked,
@@ -203,9 +200,9 @@
         autocomplete="off"
         placeholder="Note heading"
         class="note-heading text-input"
-        value={heading}
+        value={noteHeading}
         onchange={(e) => {
-          heading = e.currentTarget.value;
+          noteHeading = e.currentTarget.value;
           updateNote();
           saveNotes();
         }}
@@ -214,9 +211,9 @@
         autocomplete="off"
         name="content"
         class="note-content"
-        value={content}
+        value={noteContent}
         onchange={(e) => {
-          content = e.currentTarget.value;
+          noteContent = e.currentTarget.value;
           updateNote();
           saveNotes();
         }}
@@ -232,9 +229,9 @@
       autocomplete="off"
       placeholder="Note heading"
       class="note-heading text-input standalone-heading"
-      value={heading}
+      value={noteHeading}
       onchange={(e) => {
-        heading = e.currentTarget.value;
+        noteHeading = e.currentTarget.value;
         updateNote();
         saveNotes();
       }}
@@ -253,10 +250,10 @@
         <img
           class="link-icon"
           src="chrome-extension://{chrome?.runtime?.id ?? "NULL"}/_favicon/?pageUrl={new URL(linkURL).origin + new URL(linkURL).pathname}&size=64"
-          alt="{heading} icon"
+          alt="{noteHeading} icon"
           draggable="false"
         />
-        <p>{heading}</p>
+        <p>{noteHeading}</p>
       </button>
     </div>
   {/if}
