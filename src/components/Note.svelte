@@ -228,9 +228,8 @@
       >
         <img
           class="link-icon"
-          src="https://www.google.com/s2/favicons?domain={new URL(linkURL)
-            .hostname}&sz=512"
-          alt="{heading} icon"
+          src="chrome-extension://{chrome.runtime.id}/_favicon/?pageUrl={new URL(linkURL).origin + new URL(linkURL).pathname}&size=64"
+          alt="${heading} icon"
           draggable="false"
         />
         <p>{heading}</p>
