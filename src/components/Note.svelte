@@ -372,7 +372,7 @@
     border: none;
     cursor: pointer;
     height: 70%;
-    width: 70%;
+    width: 100%;
     color: var(--text-color);
   }
 
