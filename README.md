@@ -2,6 +2,8 @@
 
 A customizable new tab page with a modern whiteboard interface. Create and organize sticky notes, headings, and links on your new tab page.
 
+![Image showing a customised new tab](screenshots/NewTab.png)
+
 ## Features
 
 - Modern dark theme with clean UI
@@ -13,6 +15,7 @@ A customizable new tab page with a modern whiteboard interface. Create and organ
 - Drag and drop to position elements
 - Resize elements to your liking
 - Delete elements with a single click
+- Lock elements in place to avoid moving or resizing them accidentally
 - Import/Export your configuration
 - Automatic saving of your layout
 
@@ -21,7 +24,7 @@ A customizable new tab page with a modern whiteboard interface. Create and organ
 1. Clone this repository
 2. Run `npm install` to install dependencies
 3. Run `npm run build` to create the extension bundle
-4. Open Chrome and go to `chrome://extensions`
+4. Open Chrome (or any chromium based browser) and go to `chrome://extensions`
 5. Enable `Developer mode` using the toggle switch in the top right corner
 6. Click "Load unpacked" and select the `build` folder
 
